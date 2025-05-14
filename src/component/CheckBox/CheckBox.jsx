@@ -1,102 +1,34 @@
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, useFormik } from "formik";
 import React, { useState } from "react";
 
 const CheckBox = () => {
-  const [ReactFavore, setReactFavore] = useState(false);
-  const [NexttFavore, setNexttFavore] = useState(false);
-  const [TypeScripttFavore, setTypeScripttFavore] = useState(false);
   const [Favorite, setFavorite] = useState([]);
 
-  const handleForm = (e) => {
-    e.preventDefault();
-    ReactFavore && setFavorite((old) => [...old, "react"]);
-    NexttFavore && setFavorite((old) => [...old, "next"]);
-    TypeScripttFavore && setFavorite((old) => [...old, "typescript"]);
-  };
-
   const handleFormik = (values) => {
-    const newFavorite = values.checked;
     if (values.toggle) {
-      newFavorite.forEach((item) => {
-        setFavorite((old) => [...old, item]);
-      });
+      setFavorite(values.checked);
     } else {
       alert("check the accept");
     }
   };
+
+  const formik = useFormik({
+    initialValues: {
+      toggle: true,
+      checked: [],
+    },
+    onSubmit: (values) => {
+      if (values.toggle) {
+        setFavorite(values.checked);
+      } else {
+        alert("check the accept");
+      }
+    },
+  });
   return (
     <div>
       <div className="flex gap-10">
         <div className="w-1/2">
-          {/* simple radio */}
-          <div className="mt-10 flex gap-5 bg-gray-200 p-4">
-            <h1>simple radio</h1>
-            <input
-              type="checkbox"
-              value={ReactFavore}
-              id="d1"
-              onChange={() => setReactFavore(!ReactFavore)}
-            />
-            <label htmlFor="d1"> react</label>
-
-            <input
-              type="checkbox"
-              value={NexttFavore}
-              id="d2"
-              onChange={() => setNexttFavore(!NexttFavore)}
-            />
-            <label htmlFor="d2"> next</label>
-
-            <input
-              type="checkbox"
-              value={TypeScripttFavore}
-              id="d3"
-              onChange={() => setTypeScripttFavore(!TypeScripttFavore)}
-            />
-            <label htmlFor="d3"> typescript</label>
-
-            <h3 className="flex gap-2">
-              your favorite :{ReactFavore && <h3>react</h3>}
-              {NexttFavore && <h3>next</h3>}
-              {TypeScripttFavore && <h3>typescript</h3>}
-            </h3>
-          </div>
-
-          {/* simple form */}
-          <div className="mt-10 flex gap-5 bg-gray-200 p-4 ">
-            <h1>simple form</h1>
-
-            <form onSubmit={handleForm} className="flex gap-5">
-              <input
-                type="checkbox"
-                value={ReactFavore}
-                id="d1"
-                onChange={() => setReactFavore(!ReactFavore)}
-              />
-              <label htmlFor="d1"> react</label>
-
-              <input
-                type="checkbox"
-                value={NexttFavore}
-                id="d2"
-                onChange={() => setNexttFavore(!NexttFavore)}
-              />
-              <label htmlFor="d2"> next</label>
-
-              <input
-                type="checkbox"
-                value={TypeScripttFavore}
-                id="d3"
-                onChange={() => setTypeScripttFavore(!TypeScripttFavore)}
-              />
-              <label htmlFor="d3"> typescript</label>
-
-              <button type="submit" className="bg-blue-400 w-fit mx-auto p-2">
-                click
-              </button>
-            </form>
-          </div>
-
           {/* Formik with its own Form and Field */}
           <div className="mt-10  bg-gray-200 p-4 ">
             <h1>Formik with its own Form and Field</h1>
@@ -107,7 +39,7 @@ const CheckBox = () => {
             >
               <Form className="flex gap-5">
                 <label>
-                  {/* use somewher like remember me*/}
+                  {/* use somewhere like remember me*/}
                   <Field type="checkbox" name="toggle" />
                   accept
                   <p className="">(check this for add)</p>
@@ -206,6 +138,61 @@ const CheckBox = () => {
               )}
             </Formik>
           </div>
+
+          {/* Formik with useFormik */}
+          <div className="mt-10  bg-gray-200 p-4 ">
+            <h1>Formik with useFormik</h1>
+
+            <form onSubmit={formik.handleSubmit} className="flex gap-5">
+              <label>
+                <input
+                  type="checkbox"
+                  name="toggle"
+                  onChange={formik.handleChange}
+                />
+                accept
+                <p className="">(check this for add)</p>
+              </label>
+
+              <div
+                role="group"
+                aria-labelledby="checkbox-group"
+                className="flex gap-2"
+              >
+                <label>
+                  <input
+                    type="checkbox"
+                    name="checked"
+                    value="react"
+                    onChange={formik.handleChange}
+                  />
+                  react
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="checked"
+                    value="next"
+                    onChange={formik.handleChange}
+                  />
+                  next
+                </label>
+                <label>
+                  <input
+                    type="checkbox"
+                    name="checked"
+                    value="typescript"
+                    onChange={formik.handleChange}
+                  />
+                  typescript
+                </label>
+
+                <button type="submit" className="bg-blue-400 w-fit mx-auto p-2">
+                  click
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
 
         <div className="w-1/2 mt-10">
@@ -213,14 +200,12 @@ const CheckBox = () => {
             {Favorite?.map((item, index) => {
               return (
                 <div key={index} className=" bg-gray-200 w-[30%] h-20">
-                  <h1>gender : {item}</h1>
+                  <h1>tech : {item}</h1>
                 </div>
               );
             })}
           </div>
         </div>
-
-        
       </div>
 
       {/* <Formik initialValues={{ toggle: true,checked: [],}} onSubmit={(values)=>console.log(values)}>

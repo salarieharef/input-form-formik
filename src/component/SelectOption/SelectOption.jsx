@@ -1,59 +1,25 @@
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, useFormik } from "formik";
 import React, { useState } from "react";
 
 const SelectOption = () => {
-  const [Tech, setTech] = useState("");
   const [TechList, setTechList] = useState([]);
 
-  const handleSimple = (e) => {
-    setTech(e.target.value);
-  };
-
-  const handleSimpleForm = (e) => {
-    e.preventDefault();
-    setTechList((old) => [...old, Tech]);
-  };
-
   const handleFormik = (values) => {
-    setTechList((old) => [...old, values.tech]);
+    setTechList([values.tech]);
   };
+
+  const formik = useFormik({
+    initialValues: {
+      tech: "",
+    },
+    onSubmit: (values) => {
+      setTechList([values.tech]);
+    },
+  });
   return (
     <div>
       <div className="flex">
         <div className="w-1/2">
-          {/* simple */}
-          <div className="flex mt-10 gap-5 bg-gray-200 p-4  ">
-          simple
-            <select className="select  max-w-xs" onChange={handleSimple}>
-              <option disabled selected>
-                Pick your favorite tech
-              </option>
-              <option>react</option>
-              <option>next</option>
-              <option>typescript</option>
-            </select>
-
-            <h1>your favorite tech : {Tech}</h1>
-          </div>
-
-          {/* simple form */}
-          <div className="flex mt-10 gap-5 bg-gray-200 p-4  ">
-          simple form 
-            <form onSubmit={handleSimpleForm} className="flex gap-5">
-              <select className="select  max-w-xs" onChange={handleSimple}>
-                <option disabled selected>
-                  Pick your favorite tech
-                </option>
-                <option>react</option>
-                <option>next</option>
-                <option>typescript</option>
-              </select>
-              <button type="submit" className="bg-blue-400 w-fit mx-auto p-2">
-                click
-              </button>
-            </form>
-          </div>
-
           {/* Formik with its own Form and Field */}
           <div className="flex mt-10 gap-5 bg-gray-200 p-4  ">
             Formik + own
@@ -112,6 +78,39 @@ const SelectOption = () => {
                 </form>
               )}
             </Formik>
+          </div>
+
+          {/* Formik with useFormik */}
+          <div className="flex mt-10 gap-5 bg-gray-200 p-4  ">
+            Formik + useFormik
+            <form onSubmit={formik.handleSubmit} className="flex gap-5">
+              <select
+                name="tech"
+                value={formik.values.tech}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                style={{ display: "block" }}
+                className="select  max-w-xs"
+              >
+                <option value="" label="Select a tech">
+                  Select a tech
+                </option>
+                <option value="react" label="react">
+                  react
+                </option>
+                <option value="next" label="next">
+                  next
+                </option>
+
+                <option value="typescript" label="typescript">
+                  typescript
+                </option>
+              </select>
+
+              <button type="submit" className="bg-blue-400 w-fit mx-auto p-2">
+                click
+              </button>
+            </form>
           </div>
         </div>
 

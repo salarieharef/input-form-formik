@@ -1,80 +1,27 @@
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, useFormik } from "formik";
 import React, { useState } from "react";
 
 const Radio = () => {
-  const [Value, setValue] = useState();
   const [List, setList] = useState([]);
 
-  const handleValue = (e) => {
-    setValue(e.target.value);
-  };
-
-  const handleForm = (e) => {
-    e.preventDefault();
-    setList([...List, Value]);
-  };
 
   const handleFormik = (values) => {
     setList([...List, values.gender]);
   };
 
+  const formik = useFormik({
+    initialValues: {
+      gender: "",
+    },
+    onSubmit: (values) => {
+      setList([...List, values.gender]);
+    },
+  });
+
   return (
     <div>
       <div className="flex gap-10">
         <div className="w-1/2">
-          {/* simple radio */}
-          <div className="mt-10 flex gap-5 bg-gray-200 p-4">
-            <h1>simple radio</h1>
-            <input
-              type="radio"
-              name="gender"
-              value="man"
-              id="d1"
-              onChange={handleValue}
-            />
-            <label htmlFor="d1"> man</label>
-
-            <input
-              type="radio"
-              name="gender"
-              value="woman"
-              id="d2"
-              onChange={handleValue}
-            />
-            <label htmlFor="d2"> woman</label>
-
-            <h1>your gender : {Value}</h1>
-          </div>
-
-          {/* simple form */}
-          <div className="mt-10 flex gap-5 bg-gray-200 p-4 ">
-            <h1>simple form</h1>
-
-            <form onSubmit={handleForm} className="flex gap-5">
-              <input
-                type="radio"
-                name="gender"
-                value="man"
-                id="d1"
-                onChange={handleValue}
-              />
-              <label htmlFor="d1"> man</label>
-
-              <input
-                type="radio"
-                name="gender"
-                value="woman"
-                id="d2"
-                onChange={handleValue}
-              />
-              <label htmlFor="d2"> woman</label>
-
-              <button type="submit" className="bg-blue-400 w-fit mx-auto p-2">
-                click
-              </button>
-            </form>
-          </div>
-
           {/* Formik with its own Form and Field */}
           <div className="mt-10  bg-gray-200 p-4 ">
             <h1>Formik with its own Form and Field</h1>
@@ -137,6 +84,48 @@ const Radio = () => {
                 </form>
               )}
             </Formik>
+          </div>
+
+          {/* Formik with useFormik */}
+          <div className="mt-10  bg-gray-200 p-4 ">
+            <h1>Formik with useFormik</h1>
+
+            <form onSubmit={formik.handleSubmit}>
+              <div
+                role="group"
+                aria-labelledby="my-radio-group"
+                className="flex gap-5"
+                  >
+                    <label>
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="man"
+                        onChange={formik.handleChange}
+                      />
+                      man
+                    </label>
+
+                    <label>
+                      <input
+                        type="radio"
+                        name="gender"
+                        value="woman"
+                        onChange={formik.handleChange}
+                      />
+                      woman
+                    </label>
+                    <div>gender : {formik.values.gender}</div>
+
+                    <button
+                      type="submit"
+                      className="bg-blue-400 w-fit mx-auto p-2"
+                    >
+                      click
+                    </button>
+                  </div>
+                </form>
+            
           </div>
         </div>
 
